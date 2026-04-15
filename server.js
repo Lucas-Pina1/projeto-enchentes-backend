@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use("/abrigos", abrigoRoutes);
 
-const PORTA = 3000;
+const PORTA = process.env.PORT || 3000;
 app.listen(PORTA, () => {
   console.log(`Servidor rodando com sucesso na porta ${PORTA}`);
 });

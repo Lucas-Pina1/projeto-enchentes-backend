@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "b96495df-d1c8-4dfb-90f9-a0ca0ea8d10b",
+		"name": "Projeto Enchentes API",
+		"description": "API para gerenciamento de abrigos em situação de enchentes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listar todos os abrigos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/abrigos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"abrigos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar abrigo por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/abrigos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"abrigos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Abrigo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"Escola Municipal Paz\",\n    \"estado\": \"RS\",\n    \"cidade\": \"Porto Alegre\",\n    \"endereco\": \"Av. Coronel, 10\",\n    \"contato\": \"(51) 98888-8888\",\n    \"capacidade\": 500,\n    \"ocupacao\": 0,\n    \"status\": \"Disponivel\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/abrigos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"abrigos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Abrigo",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"Escola Municipal Paz (Atualizado)\",\n    \"estado\": \"RS\",\n    \"cidade\": \"Porto Alegre\",\n    \"endereco\": \"Av. Coronel, 10\",\n    \"contato\": \"(51) 98888-8888\",\n    \"capacidade\": 500,\n    \"ocupacao\": 350,\n    \"status\": \"Disponivel\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/abrigos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"abrigos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Abrigo",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/abrigos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"abrigos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
