@@ -1,4 +1,5 @@
 import { pool } from '../config/database.js';
+import { abrigoSchema, idSchema } from '../validations/abrigoValidation.js';
 
 export class AbrigoController {
   
@@ -17,6 +18,12 @@ export class AbrigoController {
   static async buscarAbrigoPorId(req, res) {
     try {
       const { id } = req.params;
+      
+      const { error } = idSchema.validate({ id });
+      if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+      }
+
       const result = await pool.query('SELECT * FROM abrigos WHERE id = $1', [id]);
       
       if (result.rows.length === 0) {
@@ -33,12 +40,16 @@ export class AbrigoController {
   // POST /abrigos
   static async criarAbrigo(req, res) {
     try {
-      const { nome, estado, cidade, endereco, capacidade, ocupacao, status, contato } = req.body;
+      const { error, value } = abrigoSchema.validate(req.body, { abortEarly: false });
       
-      // Validação Back-end de campos obrigatórios
-      if (!nome || !estado || !cidade || !endereco || !capacidade || !contato) {
-        return res.status(400).json({ error: 'Todos os campos são obrigatórios. (Nome, estado, cidade, endereço, capacidade, contato)' });
+      if (error) {
+        return res.status(400).json({ 
+          error: 'Erro de validação.', 
+          details: error.details.map(err => err.message) 
+        });
       }
+
+      const { nome, estado, cidade, endereco, capacidade, ocupacao, status, contato } = value;
 
       const query = `
         INSERT INTO abrigos (nome, estado, cidade, endereco, capacidade, ocupacao, status, contato)
@@ -59,11 +70,22 @@ export class AbrigoController {
   static async atualizarAbrigo(req, res) {
     try {
       const { id } = req.params;
-      const { nome, estado, cidade, endereco, capacidade, ocupacao, status, contato } = req.body;
 
-      if (!nome || !estado || !cidade || !endereco || !capacidade || !contato) {
-        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+      const idValidation = idSchema.validate({ id });
+      if (idValidation.error) {
+        return res.status(400).json({ error: idValidation.error.details[0].message });
       }
+
+      const { error, value } = abrigoSchema.validate(req.body, { abortEarly: false });
+
+      if (error) {
+        return res.status(400).json({ 
+          error: 'Erro de validação.', 
+          details: error.details.map(err => err.message) 
+        });
+      }
+
+      const { nome, estado, cidade, endereco, capacidade, ocupacao, status, contato } = value;
 
       // Verifica se existe
       const abrigoExiste = await pool.query('SELECT * FROM abrigos WHERE id = $1', [id]);
@@ -91,6 +113,11 @@ export class AbrigoController {
   static async deletarAbrigo(req, res) {
     try {
       const { id } = req.params;
+
+      const { error } = idSchema.validate({ id });
+      if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+      }
 
       const abrigoExiste = await pool.query('SELECT * FROM abrigos WHERE id = $1', [id]);
       if (abrigoExiste.rows.length === 0) {
