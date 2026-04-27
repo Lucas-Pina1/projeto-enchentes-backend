@@ -1,6 +1,6 @@
 # Projeto Enchentes - Sistema de Gerenciamento de Abrigos (Back-end)
 
-🔗 **Link da API em Produção:** [https://projeto-enchentes-backend.onrender.com](https://projeto-enchentes-backend.onrender.com)
+🔗 **Link da API em Produção:** [https://projeto-enchentes-backend.onrender.com](https://projeto-enchentes-backend.onrender.com/abrigos)
 
 ## 1 - Apresentação da Ideia
 
