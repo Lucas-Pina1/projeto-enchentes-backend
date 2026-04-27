@@ -1,14 +1,13 @@
-import pg from 'pg';
-import dotenv from 'dotenv';
+import pg from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 const { Pool } = pg;
 
 export const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
-
-pool.on('connect', () => {
-    console.log('Banco de Dados Local conectado com sucesso!');
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
