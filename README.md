@@ -35,6 +35,39 @@ A população, por meio da aplicação web (Front-end), consome esses dados para
 - **Cors & Dotenv**: Segurança e controle de variáveis de ambiente.
 - **Postman**: Documentação e teste de rotas (`projeto-enchentes.postman_collection.json`).
 
+### 4.1 - Estrutura de Pastas
+
+```text
+📁 projeto-enchentes-backend
+├── 📄 server.js             # Ponto de entrada do servidor (inicia a aplicação)
+├── 📄 package.json          # Dependências e scripts do projeto
+├── 📁 src                   # Código-fonte principal
+│   ├── 📁 config            # Configurações gerais (ex: conexão com o banco em database.js)
+│   ├── 📁 controllers       # Lógica central da API (recebe requisição, processa e devolve resposta)
+│   ├── 📁 db                # Scripts isolados de banco de dados (ex: setup.js para rodar no Render)
+│   ├── 📁 routes            # Definição das rotas e endpoints disponíveis da API
+│   └── 📁 validations       # Schemas do Joi para validação de dados antes de ir ao banco
+```
+
+### 4.2 - Arquitetura da API e Pensamento
+A arquitetura do back-end segue o padrão **MVC (Model-View-Controller)** adaptado para o contexto de uma API REST, dividindo a lógica em Rotas (`routes`) e Controladores (`controllers`).
+- **Motivação:** Escolhemos essa arquitetura por sua escalabilidade e separação de responsabilidades. Isso garante que a lógica de "como uma requisição chega" fique separada da lógica de "o que o sistema faz com ela", tornando o código fácil de dar manutenção. Caso queiramos adicionar novas funcionalidades no futuro (ex: "Doações" ou "Voluntários"), podemos criar novos arquivos sem bagunçar a organização do que já existe.
+- **Validação Antecipada:** A camada de validação com Joi foi adicionada diretamente no Controller, bloqueando dados inválidos de entrarem no banco e poupando custos de processamento desnecessários.
+
+### 4.3 - Modelagem do Banco de Dados (PostgreSQL)
+A prioridade do banco de dados neste MVP é **rapidez, resiliência e simplicidade**.
+
+O banco foi modelado com uma tabela única principal (`abrigos`), estruturada para buscas velozes. Em um cenário de crise climática, não podemos ter queries complexas atrasando a página. O foco é a leitura rápida.
+
+**Estrutura da Tabela `abrigos`**:
+- `id` (SERIAL PRIMARY KEY): Identificador único do abrigo.
+- `nome` (VARCHAR): Nome do local (ex: "Ginásio Municipal").
+- `estado` e `cidade` (VARCHAR): Isolados do endereço completo para permitir filtros nativos rápidos no Front-end por localização.
+- `endereco` e `contato` (VARCHAR): Informações textuais.
+- `capacidade` e `ocupacao` (INTEGER): Dois campos numéricos vitais. O Controller implementa travas para que a ocupação não exceda a capacidade do local.
+- `status` (VARCHAR): Um campo que guarda `'Disponivel'` ou `'Lotado'`. Embora o status possa ser calculado pelo Back-end comparando a ocupação e a capacidade, optou-se por salvar esse valor estático no banco para baratear pesquisas simples de voluntários buscando abrigos vagos ("WHERE status = 'Disponivel'").
+- `created_at` (TIMESTAMP): Data de registro.
+
 ***
 
 ## 5 - Como Rodar o Projeto Localmente
