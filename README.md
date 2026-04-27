@@ -1,74 +1,75 @@
-# Projeto Enchentes - Sistema de Gerenciamento de Abrigos
+# Projeto Enchentes - Sistema de Gerenciamento de Abrigos (Back-end)
+
+🔗 **Link da API em Produção:** [https://projeto-enchentes-backend.onrender.com](https://projeto-enchentes-backend.onrender.com)
 
 ## 1 - Apresentação da Ideia
 
-Esse é o meu projeto. A ideia surgiu a partir do desafio sobre enchentes no Brasil proporcionado pelo Vai na Web. Pensando nesse cenário crítico e desolador de calamidade e perda repentina de lares por milhares de pessoas, decidi focar no problema da **falta de informação sobre abrigos**, buscando criar um sistema que unifica e organiza essas informações de forma confiável.
+Esse projeto surgiu a partir do desafio sobre enchentes no Brasil proporcionado pelo Vai na Web. Pensando no cenário crítico de calamidade e perda de lares, o foco foi resolver o problema da **falta de informação centralizada sobre abrigos**. O objetivo é criar um sistema que unifica e organiza essas informações de forma confiável e em tempo real.
 
-## 2 - Problema Escolhido
+## 2 - Solução Proposta
 
-**Caso 1: Falta de Informação sobre Abrigos.** 
-Durante enchentes, encontrar um e deslocar-se para um abrigo seguro torna-se uma corrida contra o tempo, muitas vezes frustrada pela desinformação e lotação desconhecida. Pessoas afetadas e voluntários precisam de um meio ágil para consultar para onde seguir com segurança sem agravar o risco das famílias.
+Foi desenvolvida uma API REST em Node.js para atuar como o gerenciador central de abrigos. A API permite que voluntários, ONGs e equipes de resgate possam:
+- Listar abrigos disponíveis.
+- Registrar novos abrigos com validação estrita.
+- Atualizar a ocupação e o status (Disponível/Lotado).
 
-## 3 - Solução Proposta
+A população, por meio da aplicação web (Front-end), consome esses dados para encontrar locais seguros rapidamente.
 
-Desenvolvi o back-end para um sistema chamado "Projeto Enchentes: Gerenciador de Abrigos". A ideia geral do sistema é prover uma API REST (Application Programming Interface) padronizada onde voluntários, organizações não-governamentais (ONGs) e equipes de resgate podem registrar, atualizar vagas, e deletar abrigos, e a população possa, por meio de uma aplicação web, listar e encontrar abrigos com capacidade disponível em sua cidade.
+## 3 - O Que Foi Feito (Atualizações Recentes)
 
-## 4 - Estrutura do Sistema
+- **Deploy na Nuvem:** A API foi hospedada de forma gratuita no **Render**, juntamente com um banco de dados **PostgreSQL** em produção.
+- **Script de Setup Automático:** Criação de um script (`npm run setup`) integrado ao `package.json` para criar as tabelas e inserir dados mockados de forma automatizada e segura (utilizando `IF NOT EXISTS`) durante o processo de deploy.
+- **Validação de Dados:** Implementação de regras de negócio e sanitização utilizando a biblioteca `Joi`. Garante a integridade de dados críticos como formato de telefone (DDD) e consistência na capacidade dos abrigos.
+- **CORS e SSL:** Configuração de SSL para o banco de dados e liberação de CORS para permitir a comunicação contínua e segura com o Front-end.
 
-O projeto foi organizado para facilitar a manutenabilidade, priorizando a divisão de responsabilidades. O back-end é estruturado da seguinte forma:
+## 4 - Estrutura do Sistema e Tecnologias
 
-### Back-end
-Desenvolvido em **Node.js** e **Express**, utilizando a arquitetura Model-View-Controller (MVC adaptada para API).
-- **`server.js`**: Ponto central da aplicação, inicializa o servidor de rotas, middlewares de CORS e tratamento JSON.
-- **`src/config/database.js`**: Centraliza a responsabilidade da conexão com o banco de dados via Pool para suportar alto tráfego.
-- **`src/routes/abrigoRoutes.js`**: Mapeia todas as requisições HTTP (GET, POST, PUT, DELETE) voltadas aos abrigos.
-- **`src/controllers/AbrigoController.js`**: Contém a lógica de negócio principal do CRUD e consultas SQL.
-
-### Banco de Dados
-Foi utilizado o **PostgreSQL**, sendo estruturado com foco em simplicidade para armazenamento e rápida leitura e busca.
-- Tabela `abrigos` armazenando: nome, estado, cidade, endereco, capacidade máxima, ocupação atual e status (ex: Total, Disponivel).
-- Um script de configuração automatizado incluído (`src/db/setup.js`) que prepara a tabela e introduz dados "mock" de testes.
-
-### Tecnologias e Ferramentas
-- NodeJS e Express para robustez;
-- `pg` como driver e query builder do postgres;
-- `dotenv` para proteção de credenciais localmente;
-- `cors` que permite a conexão entre front-end e aplicação futuramente;
-- O arquivo `projeto-enchentes.postman_collection.json` pode ser diretamente importado no Postman para o envio e teste de todas as requisições prontas na aplicação.
+- **Node.js** e **Express**: Construção do servidor e rotas HTTP.
+- **PostgreSQL**: Banco de dados relacional para persistência segura.
+- **pg**: Driver oficial de conexão com o banco.
+- **Joi**: Camada de validação de esquemas (Schema Validation).
+- **Cors & Dotenv**: Segurança e controle de variáveis de ambiente.
+- **Postman**: Documentação e teste de rotas (`projeto-enchentes.postman_collection.json`).
 
 ***
 
-## 5 - Como Rodar o Projeto
+## 5 - Como Rodar o Projeto Localmente
 
-Caso você tenha clonado o repositório, siga o passo a passo abaixo para rodar o Back-end localmente:
-
-1. **Instale as dependências**
-   Abra o terminal na pasta raiz (`projeto-enchentes-backend`) e execute:
+1. **Instale as dependências:**
    ```bash
    npm install
    ```
 
-2. **Configure o Banco de Dados (PostgreSQL)**
-   - Crie um banco de dados vazio no seu PostgreSQL (ex: `db_abrigos`).
-   - Na raiz do projeto, crie um arquivo chamado `.env`.
-   - Adicione sua string de conexão e a porta, substituindo com seus dados:
+2. **Configure o Banco de Dados:**
+   - Crie um arquivo `.env` na raiz do projeto.
+   - Adicione sua string de conexão (pode ser a External URL do Render ou um banco local):
      ```env
-     DATABASE_URL=postgresql://seu_usuario:sua_senha@localhost:5432/nome_do_banco
+     DATABASE_URL=postgresql://usuario:senha@host:5432/banco
      PORT=3000
      ```
 
-3. **Inicialize as Tabelas**
-   Rode o script automático para criar a tabela `abrigos` no seu banco de dados:
+3. **Inicialize as Tabelas:**
    ```bash
-   node src/db/setup.js
+   npm run setup
    ```
 
-4. **Inicie o Servidor**
+4. **Inicie o Servidor:**
    ```bash
    npm run dev
    ```
-   *O servidor estará escutando na porta configurada (ex: `http://localhost:3000`). Se quiser rodar a interface (Front-end), inicie o Vite na respectiva pasta que se conectará automaticamente a este servidor.*
 
 ***
 
-> **Observação Final:** O projeto prioriza servir rapidamente informações atualizadas que salvam vidas, garantindo clareza por trás da camada do servidor.
+## 6 - Documentação Visual da API (Postman)
+
+Para facilitar o entendimento das rotas, os formatos de requisição e os retornos esperados, a documentação completa da API foi exportada.
+
+1. Baixe o aplicativo ou acesse a versão web do **[Postman](https://www.postman.com/)**.
+2. Clique no botão **"Import"** (no canto superior esquerdo).
+3. Selecione ou arraste o arquivo `projeto-enchentes.postman_collection.json` localizado na raiz deste projeto.
+4. A coleção **"Projeto Enchentes API"** aparecerá na sua aba lateral de *Collections*.
+5. **Para visualizar de forma rica e detalhada:** Clique em cima do nome da coleção recém-importada e, no painel central/direito, clique no ícone de documento ou na aba **"Documentation"** (View complete documentation).
+6. O Postman irá gerar uma página visual completa, apresentando exemplos de JSON, rotas detalhadas e descrições para cada endpoint da aplicação.
+
+***
+> O projeto prioriza servir rapidamente informações atualizadas que salvam vidas, garantindo estabilidade e fácil manutenibilidade na camada do servidor.
